@@ -97,6 +97,94 @@
             position: relative;
         }
 
+        /* 毛玻璃中間卡片 */
+        .frost-panel {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: min(700px, 92vw);
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(12px) saturate(120%);
+            -webkit-backdrop-filter: blur(12px) saturate(120%);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.6);
+            z-index: 200;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .frost-left {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            min-width: 220px;
+        }
+
+        .frost-weather-icon {
+            font-size: 4.5rem;
+            filter: drop-shadow(0 6px 0 rgba(0,0,0,0.08));
+        }
+
+        .frost-temp {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--ac-brown);
+            line-height: 1;
+        }
+
+        .frost-right {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+            min-width: 200px;
+        }
+
+        .frost-desc {
+            font-size: 1.1rem;
+            color: #6b5f57;
+            font-weight: 700;
+        }
+
+        .frost-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .badge {
+            background: rgba(255,255,255,0.8);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-weight: 800;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.04);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .badge-small { font-size: 0.9rem; }
+
+        /* 手機版調整：毛玻璃卡片變成上方靠近頂端，內容改為直列 */
+        @media (max-width: 520px) {
+            .frost-panel {
+                position: static;
+                transform: none;
+                width: calc(100% - 32px);
+                margin: 18px auto;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .frost-right { align-items: flex-start; width: 100%; }
+        }
+
         .hero-period {
             position: absolute;
             top: -15px;
@@ -173,6 +261,27 @@
 
     <div class="container" id="mainContent" style="display: none;">
         <div id="heroCard"></div>
+        <!-- 毛玻璃固定卡片（顯示今日天氣、穿著與雨具建議） -->
+        <div id="frostPanel" class="frost-panel" aria-live="polite" style="display:none;">
+            <div class="frost-left">
+                <div id="frostIcon" class="frost-weather-icon">☁️</div>
+                <div>
+                    <div id="frostTemp" class="frost-temp">--°</div>
+                    <div id="frostPeriod" style="font-weight:800;color:#5e5048;">--</div>
+                </div>
+            </div>
+
+            <div class="frost-right">
+                <div id="frostDesc" class="frost-desc">載入中…</div>
+
+                <div class="frost-actions">
+                    <div id="clothingBadge" class="badge badge-small">👕 舒適</div>
+                    <div id="umbrellaBadge" class="badge badge-small">☂️ 不需要</div>
+                </div>
+
+                <div id="frostMeta" style="font-size:0.85rem;color:#7c6f66;">最高: --° / 降雨率: --</div>
+            </div>
+        </div>
         <h3 class="section-title">稍後預報</h3>
         <div class="scroll-container" id="futureForecasts"></div>
     </div>
@@ -190,34 +299,120 @@
             return "🌤️";
         }
 
+        function getAdvice(rainProb, maxTemp) {
+            let rainIcon = "🌂";
+            let rainText = "不用帶傘";
+            const rainNum = parseInt(rainProb) || 0;
+            if (rainNum > 30) {
+                rainIcon = "☂️";
+                rainText = "建議攜帶雨具";
+            }
+
+            let clothIcon = "👕";
+            let clothText = "舒適穿搭";
+            const t = parseInt(maxTemp);
+            if (!Number.isNaN(t)) {
+                if (t >= 28) { clothIcon = "🎽"; clothText = "短袖就好"; }
+                else if (t <= 20) { clothIcon = "🧥"; clothText = "記得穿外套"; }
+            }
+
+            return { rainIcon, rainText, clothIcon, clothText };
+        }
+
+        function getTimePeriod(startTime) {
+            const hour = new Date(startTime).getHours();
+            if (hour >= 5 && hour < 11) return "早晨";
+            if (hour >= 11 && hour < 14) return "中午";
+            if (hour >= 14 && hour < 18) return "下午";
+            if (hour >= 18 && hour < 23) return "晚上";
+            return "深夜";
+        }
+
         function applyBackground(weather) {
             const body = document.body;
             body.classList.remove("bg-sunny", "bg-rainy", "bg-cloudy");
 
+            if (!weather) return;
             if (weather.includes("晴")) body.classList.add("bg-sunny");
             else if (weather.includes("雨")) body.classList.add("bg-rainy");
             else if (weather.includes("陰") || weather.includes("多雲")) body.classList.add("bg-cloudy");
         }
 
         function renderWeather(data) {
-            const current = data.forecasts[0];
+            const forecasts = data.forecasts;
+            const current = forecasts[0];
+            const others = forecasts.slice(1);
+
             applyBackground(current.weather);
+
+            // 填入毛玻璃卡片內容
+            const avgTemp = Math.round((parseInt(current.maxTemp) + parseInt(current.minTemp)) / 2) || '--';
+            const period = getTimePeriod(current.startTime);
+            const advice = getAdvice(current.rain, current.maxTemp);
+
+            document.getElementById('frostIcon').textContent = getWeatherIcon(current.weather);
+            document.getElementById('frostTemp').textContent = `${avgTemp}°`;
+            document.getElementById('frostPeriod').textContent = period;
+            document.getElementById('frostDesc').textContent = current.weather;
+
+            document.getElementById('clothingBadge').innerHTML = `${advice.clothIcon} ${advice.clothText}`;
+            document.getElementById('umbrellaBadge').innerHTML = `${advice.rainIcon} ${advice.rainText}`;
+
+            document.getElementById('frostMeta').textContent = `最高: ${current.maxTemp}° / 降雨率: ${current.rain}`;
+
+            // 顯示毛玻璃卡片
+            document.getElementById('frostPanel').style.display = 'flex';
+
+            // 渲染稍後預報（保留原有區塊）
+            const scrollContainer = document.getElementById('futureForecasts');
+            scrollContainer.innerHTML = '';
+            const todayDate = new Date().getDate();
+
+            others.forEach(f => {
+                let p = getTimePeriod(f.startTime);
+                const fDate = new Date(f.startTime);
+                if (fDate.getDate() !== todayDate) p = '明天' + p;
+
+                scrollContainer.innerHTML += `
+                    <div class="mini-card">
+                        <div class="mini-time">${p}</div>
+                        <div class="mini-icon">${getWeatherIcon(f.weather)}</div>
+                        <div class="mini-temp">${f.minTemp}° - ${f.maxTemp}°</div>
+                        <div style="font-size:0.8rem; color:#888; margin-top:5px;">💧${f.rain}</div>
+                    </div>
+                `;
+            });
+
+            // 更新右上角日期
+            const now = new Date();
+            const month = now.getMonth() + 1;
+            const date = now.getDate();
+            const dayIndex = now.getDay();
+            const days = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
+
+            document.getElementById('updateTime').textContent = `${month}月${date}日 ${days[dayIndex]}`;
+
+            // 隱藏 loading 並顯示主內容
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
         }
 
         async function fetchWeather() {
-            const delayPromise = new Promise((res) => setTimeout(res, 1500));
-            const fetchPromise = fetch(API_URL).then((res) => res.json());
+            try {
+                const delayPromise = new Promise(resolve => setTimeout(resolve, 800));
+                const fetchPromise = fetch(API_URL).then(res => res.json());
+                const [_, json] = await Promise.all([delayPromise, fetchPromise]);
 
-            const [_, json] = await Promise.all([delayPromise, fetchPromise]);
-
-            if (json.success) {
-                renderWeather(json.data);
+                if (json.success) renderWeather(json.data);
+                else throw new Error('API error');
+            } catch (e) {
+                console.error(e);
+                alert('天氣資料讀取失敗，請稍後再試。');
                 document.getElementById('loading').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
             }
         }
 
-        document.addEventListener("DOMContentLoaded", fetchWeather);
+        document.addEventListener('DOMContentLoaded', fetchWeather);
     </script>
 </body>
 </html>
