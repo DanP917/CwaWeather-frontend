@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>森森天氣</title>
+<title>丹丹天氣</title>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -118,7 +118,7 @@ body {
 }
 .small-card {
     text-align:center;
-    color: #333333; /* 深灰色 */
+    color: #333333;
     font-weight:700;
     background:none;
     border:none;
@@ -149,9 +149,24 @@ body {
     0%,100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
 }
+#page-title {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(10px) saturate(120%);
+    border-radius: 16px;
+    font-weight: 900;
+    font-size: clamp(1rem, 2.4vw, 1.4rem);
+    z-index: 300;
+    color: var(--ac-dark);
+}
 </style>
 </head>
 <body>
+
+<div id="page-title">丹丹氣象</div>
 
 <div id="location-tag">
     📍 <select id="location-select">
@@ -205,9 +220,26 @@ body {
 </div>
 
 <script>
+// 你的後端位址（Zeabur）
+const API_BASE = "https://danlearning-weather-taipei.zeabur.app";
+
+// 格式化日期 + 時間
+function formatDateTime(dateStr){
+    if(!dateStr) return "--";
+    const d = new Date(dateStr.replace(' ','T'));
+    if(isNaN(d)) return "--";
+
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const dd = String(d.getDate()).padStart(2,'0');
+    const hh = String(d.getHours()).padStart(2,'0');
+    const min = String(d.getMinutes()).padStart(2,'0');
+
+    return `${mm}/${dd} ${hh}:${min}`;
+}
+
+// 中文日期（僅今日使用）
 function formatDateChinese(dateStr){
     if(!dateStr) return "--";
-    // dateStr 形如 "2025-12-07 06:00:00"
     const d = new Date(dateStr.replace(' ','T'));
     if(isNaN(d)) return "--";
     const dayNames = ["日","一","二","三","四","五","六"];
@@ -229,16 +261,20 @@ function getAdvice(rain, maxTemp){
 
 async function fetchWeather(location){
   try {
-    const res = await fetch(`http://localhost:3000/api/weather/${location}`);
+    const res = await fetch(`${API_BASE}/api/weather/${location}`);
     const json = await res.json();
     if (!json.success) return;
+
     const data = json.data;
     const forecasts = data.forecasts;
 
     // 今日天氣
     const today = forecasts[0];
     document.getElementById('today-date').textContent = formatDateChinese(today.startTime);
-    document.getElementById('today-weather').textContent = today.weather.includes('晴') ? '☀️' : today.weather.includes('雨') ? '🌧️' : '☁️';
+    document.getElementById('today-weather').textContent =
+        today.weather.includes('晴') ? '☀️' :
+        today.weather.includes('雨') ? '🌧️' : '☁️';
+
     document.getElementById('today-temp').textContent = `${today.minTemp} ~ ${today.maxTemp}`;
     document.getElementById('today-rain').textContent = `降雨機率: ${today.rain}`;
     document.getElementById('today-comfort').textContent = today.comfort;
@@ -251,32 +287,59 @@ async function fetchWeather(location){
     else body.classList.add('bg-cloudy');
 
     // 建議
-    const advice = getAdvice(today.rain.replace('%',''), today.maxTemp.replace('°C',''));
+    const advice = getAdvice(
+        today.rain.replace('%',''),
+        today.maxTemp.replace('°C','')
+    );
+
     document.getElementById('advice-cloth-icon').textContent = advice.clothIcon;
     document.getElementById('advice-cloth-text').textContent = advice.clothText;
     document.getElementById('advice-rain-icon').textContent = advice.rainIcon;
     document.getElementById('advice-rain-text').textContent = advice.rainText;
 
-    // 明後兩天
+    // ------- ⭐ 更新的小卡片（含時間） ⭐ -------
     const smallCards = document.querySelectorAll('.small-card');
+
     function fillCard(card, forecast){
-        card.querySelector('.card-date').textContent = formatDateChinese(forecast.startTime);
-        card.querySelector('.card-weather').textContent = forecast.weather.includes('晴') ? '☀️' :
-                                                          forecast.weather.includes('雨') ? '🌧️' : '☁️';
-        card.querySelector('.card-temp').textContent = `${forecast.minTemp} ~ ${forecast.maxTemp}`;
-    }
-    fillCard(smallCards[0], forecasts[1]);
-    fillCard(smallCards[1], forecasts[2]);
+    const d = new Date(forecast.startTime.replace(' ', 'T'));
+    const dayNames = ["日","一","二","三","四","五","六"];
+
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const w = dayNames[d.getDay()];
+
+    const hh = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+
+    // 完整格式：日期 + 星期 + 時間
+    const fullDateTime = `${yyyy}.${mm}.${dd} (星期${w}) ${hh}:${min}`;
+
+    card.querySelector('.card-date').textContent = fullDateTime;
+
+    card.querySelector('.card-weather').textContent =
+        forecast.weather.includes('晴') ? '☀️' :
+        forecast.weather.includes('雨') ? '🌧️' : '☁️';
+
+    card.querySelector('.card-temp').textContent =
+        `${forecast.minTemp} ~ ${forecast.maxTemp}`;
+}
+
+
+    fillCard(smallCards[0], forecasts[1]); // 今天晚上
+    fillCard(smallCards[1], forecasts[2]); // 明天白天
 
   } catch(err) {
     console.error('前端讀取天氣失敗', err);
   }
 }
 
+// 地區選單
 const locationSelect = document.getElementById('location-select');
 locationSelect.addEventListener('change', ()=>{ fetchWeather(locationSelect.value); });
 fetchWeather(locationSelect.value);
 </script>
+
 
 </body>
 </html>
