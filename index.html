@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>丹丹天氣</title>
+<title>丹丹天氣 (可本地測試)</title>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -39,129 +39,23 @@ body {
     flex-direction: column;
     gap:clamp(6px,1vw,12px);
 }
-#today-date {
-    font-weight:900;
-    font-size:clamp(1rem,2vw,1.4rem);
-    text-align:center;
-    margin-bottom:clamp(4px,1vw,8px);
-}
-#today-info-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap:clamp(8px,2vw,12px);
-}
-#weather-info {
-    display:flex;
-    flex-direction: row;
-    align-items: center;
-    gap:clamp(6px,1.5vw,10px);
-    font-weight:700;
-    flex:1;
-    justify-content:flex-start;
-}
-#today-weather {
-    font-size:clamp(2.5rem,6vw,3.5rem);
-    animation: bounce 3s infinite;
-}
-#weather-description {
-    display:flex;
-    flex-direction: column;
-    gap:clamp(2px,0.5vw,4px);
-    font-weight:700;
-    font-size:clamp(0.85rem,2vw,0.95rem);
-}
-#separator {
-    width:2px;
-    background: rgba(0,0,0,0.2);
-    border-radius:1px;
-    margin:0 4px;
-}
-#advice-info {
-    display:flex;
-    flex-direction: row;
-    gap:clamp(8px,2vw,12px);
-    align-items:center;
-    font-weight:700;
-    flex:1;
-    justify-content:flex-end;
-    font-size:clamp(0.8rem,1.8vw,0.95rem);
-}
-.advice-item {
-    display:flex;
-    flex-direction: column;
-    align-items:center;
-    font-weight:700;
-    text-align:center;
-}
-.advice-item div:first-child {
-    font-size:clamp(1.2rem,3vw,1.5rem);
-    margin-bottom:2px;
-}
-#future-cards {
-    position: fixed;
-    top:calc(40% + clamp(180px,40vw,250px));
-    left:50%; transform:translateX(-50%);
-    display:flex;
-    gap:10px;
-    justify-content:center;
-    width:clamp(300px,80vw,750px);
-}
-.small-card-wrapper {
-    flex:1;
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(12px) saturate(120%);
-    border-radius:16px;
-    padding:clamp(8px,1vw,10px);
-    box-shadow:0 10px 30px rgba(0,0,0,0.1);
-    border:1px solid rgba(255,255,255,0.6);
-}
-.small-card {
-    text-align:center;
-    color: #333333;
-    font-weight:700;
-    background:none;
-    border:none;
-}
-.small-card div { 
-    margin:2px 0; 
-    font-weight:700; 
-    font-size:clamp(0.8rem,2vw,0.9rem); 
-}
-
-#location-tag {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    background: rgba(255,255,255,0.55);
-    backdrop-filter: blur(10px) saturate(120%);
-    padding:6px 12px;
-    border-radius:16px;
-    font-weight:900;
-    font-size:clamp(0.8rem,2vw,1rem);
-    display:flex;
-    align-items:center;
-    gap:6px;
-    z-index:200;
-}
+#today-date { font-weight:900; font-size:clamp(1rem,2vw,1.4rem); text-align:center; margin-bottom:clamp(4px,1vw,8px); }
+#today-info-container { display:flex; align-items:center; justify-content:space-between; gap:clamp(8px,2vw,12px); }
+#weather-info { display:flex; flex-direction:row; align-items:center; gap:clamp(6px,1.5vw,10px); font-weight:700; flex:1; justify-content:flex-start; }
+#today-weather { font-size:clamp(2.5rem,6vw,3.5rem); animation:bounce 3s infinite; }
+#weather-description { display:flex; flex-direction:column; gap:clamp(2px,0.5vw,4px); font-weight:700; font-size:clamp(0.85rem,2vw,0.95rem); }
+#separator { width:2px; background: rgba(0,0,0,0.2); border-radius:1px; margin:0 4px; }
+#advice-info { display:flex; flex-direction:row; gap:clamp(8px,2vw,12px); align-items:center; font-weight:700; flex:1; justify-content:flex-end; font-size:clamp(0.8rem,1.8vw,0.95rem); }
+.advice-item { display:flex; flex-direction:column; align-items:center; font-weight:700; text-align:center; }
+.advice-item div:first-child { font-size:clamp(1.2rem,3vw,1.5rem); margin-bottom:2px; }
+#future-cards { position: fixed; top:calc(40% + clamp(180px,40vw,250px)); left:50%; transform:translateX(-50%); display:flex; gap:10px; justify-content:center; width:clamp(300px,80vw,750px); }
+.small-card-wrapper { flex:1; background: rgba(255,255,255,0.55); backdrop-filter: blur(12px) saturate(120%); border-radius:16px; padding:clamp(8px,1vw,10px); box-shadow:0 10px 30px rgba(0,0,0,0.1); border:1px solid rgba(255,255,255,0.6); }
+.small-card { text-align:center; color: #333333; font-weight:700; background:none; border:none; }
+.small-card div { margin:2px 0; font-weight:700; font-size:clamp(0.8rem,2vw,0.9rem); }
+#location-tag { position: fixed; top: 12px; left: 12px; background: rgba(255,255,255,0.55); backdrop-filter: blur(10px) saturate(120%); padding:6px 12px; border-radius:16px; font-weight:900; font-size:clamp(0.8rem,2vw,1rem); display:flex; align-items:center; gap:6px; z-index:200; }
 #location-select { background:none; border:none; font-weight:900; font-size:clamp(0.8rem,2vw,1rem); }
-@keyframes bounce {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-#page-title {
-    position: fixed;
-    top: 12px;
-    right: 12px;
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(10px) saturate(120%);
-    border-radius: 16px;
-    font-weight: 900;
-    font-size: clamp(1rem, 2.4vw, 1.4rem);
-    z-index: 300;
-    color: var(--ac-dark);
-}
+@keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10px);} }
+#page-title { position: fixed; top:12px; right:12px; padding:8px 16px; background: rgba(255,255,255,0.55); backdrop-filter: blur(10px) saturate(120%); border-radius:16px; font-weight:900; font-size:clamp(1rem,2.4vw,1.4rem); z-index:300; color: var(--ac-dark); }
 </style>
 </head>
 <body>
@@ -169,75 +63,61 @@ body {
 <div id="page-title">丹丹氣象</div>
 
 <div id="location-tag">
-    📍 <select id="location-select">
-        <option value="taipei">台北市</option>
-        <option value="newtaipei" selected>新北市</option>
-        <option value="taoyuan">桃園市</option>
-        <option value="taichung">台中市</option>
-        <option value="tainan">台南市</option>
-        <option value="kaohsiung">高雄市</option>
-        <option value="keelung">基隆市</option>
-        <option value="hsinchu_city">新竹市</option>
-        <option value="hsinchu_county">新竹縣</option>
-        <option value="miaoli">苗栗縣</option>
-        <option value="changhua">彰化縣</option>
-        <option value="nantou">南投縣</option>
-        <option value="yunlin">雲林縣</option>
-        <option value="chiayi_city">嘉義市</option>
-        <option value="chiayi_county">嘉義縣</option>
-        <option value="pingtung">屏東縣</option>
-        <option value="yilan">宜蘭縣</option>
-        <option value="hualien">花蓮縣</option>
-        <option value="taitung">台東縣</option>
-        <option value="penghu">澎湖縣</option>
-        <option value="kinmen">金門縣</option>
-        <option value="lienchiang">連江縣</option>
-    </select>
+📍 <select id="location-select">
+  <option value="taipei">台北市</option>
+  <option value="newtaipei">新北市</option>
+  <option value="taoyuan">桃園市</option>
+  <option value="taichung">台中市</option>
+  <option value="tainan">台南市</option>
+  <option value="kaohsiung">高雄市</option>
+  <option value="keelung">基隆市</option>
+  <option value="hsinchu_city">新竹市</option>
+  <option value="hsinchu_county">新竹縣</option>
+  <option value="miaoli">苗栗縣</option>
+  <option value="changhua">彰化縣</option>
+  <option value="nantou">南投縣</option>
+  <option value="yunlin">雲林縣</option>
+  <option value="chiayi_city">嘉義市</option>
+  <option value="chiayi_county">嘉義縣</option>
+  <option value="pingtung">屏東縣</option>
+  <option value="yilan">宜蘭縣</option>
+  <option value="hualien">花蓮縣</option>
+  <option value="taitung">台東縣</option>
+  <option value="penghu">澎湖縣</option>
+  <option value="kinmen">金門縣</option>
+  <option value="lienchiang">連江縣</option>
+</select>
 </div>
 
+
 <div id="today-block">
-  <div id="today-date">載入中...</div>
-  <div id="today-info-container">
-    <div id="weather-info">
-      <div id="today-weather">☀️</div>
-      <div id="weather-description">
-        <div id="today-temp">載入中...</div>
-        <div id="today-rain">載入中...</div>
-        <div id="today-comfort">載入中...</div>
-      </div>
-    </div>
-    <div id="separator"></div>
-    <div id="advice-info">
-      <div class="advice-item"><div id="advice-cloth-icon">👕</div><div id="advice-cloth-text">載入中</div></div>
-      <div class="advice-item"><div id="advice-rain-icon">🌂</div><div id="advice-rain-text">載入中</div></div>
-    </div>
-  </div>
+<div id="today-date">載入中...</div>
+<div id="today-info-container">
+<div id="weather-info">
+<div id="today-weather">☀️</div>
+<div id="weather-description">
+<div id="today-temp">載入中...</div>
+<div id="today-rain">載入中...</div>
+<div id="today-comfort">載入中...</div>
+</div>
+</div>
+<div id="separator"></div>
+<div id="advice-info">
+<div class="advice-item"><div id="advice-cloth-icon">👕</div><div id="advice-cloth-text">載入中</div></div>
+<div class="advice-item"><div id="advice-rain-icon">🌂</div><div id="advice-rain-text">載入中</div></div>
+</div>
+</div>
 </div>
 
 <div id="future-cards">
-  <div class="small-card-wrapper"><div class="small-card"><div class="card-date">--</div><div class="card-weather">--</div><div class="card-temp">--</div></div></div>
-  <div class="small-card-wrapper"><div class="small-card"><div class="card-date">--</div><div class="card-weather">--</div><div class="card-temp">--</div></div></div>
+<div class="small-card-wrapper"><div class="small-card"><div class="card-date">--</div><div class="card-weather">--</div><div class="card-temp">--</div></div></div>
+<div class="small-card-wrapper"><div class="small-card"><div class="card-date">--</div><div class="card-weather">--</div><div class="card-temp">--</div></div></div>
 </div>
 
 <script>
-// 你的後端位址（Zeabur）
 const API_BASE = "https://danlearning-weather-taipei.zeabur.app";
 
-// 格式化日期 + 時間
-function formatDateTime(dateStr){
-    if(!dateStr) return "--";
-    const d = new Date(dateStr.replace(' ','T'));
-    if(isNaN(d)) return "--";
-
-    const mm = String(d.getMonth()+1).padStart(2,'0');
-    const dd = String(d.getDate()).padStart(2,'0');
-    const hh = String(d.getHours()).padStart(2,'0');
-    const min = String(d.getMinutes()).padStart(2,'0');
-
-    return `${mm}/${dd} ${hh}:${min}`;
-}
-
-// 中文日期（僅今日使用）
+// 中文日期格式
 function formatDateChinese(dateStr){
     if(!dateStr) return "--";
     const d = new Date(dateStr.replace(' ','T'));
@@ -252,7 +132,7 @@ function formatDateChinese(dateStr){
 
 function getAdvice(rain, maxTemp){
     let rainIcon = '🌂', rainText='不用帶傘';
-    if(parseInt(rain) > 30){ rainIcon='☂️'; rainText='記得帶傘！'; }
+    if(parseInt(rain)>30){ rainIcon='☂️'; rainText='記得帶傘！'; }
     let clothIcon='👕', clothText='舒適穿搭';
     if(parseInt(maxTemp)>=28){ clothIcon='🎽'; clothText='短袖出門'; }
     else if(parseInt(maxTemp)<=20){ clothIcon='🧥'; clothText='加件外套'; }
@@ -260,21 +140,18 @@ function getAdvice(rain, maxTemp){
 }
 
 async function fetchWeather(location){
-  try {
-    const res = await fetch(`${API_BASE}/api/weather/${location}`);
+try{
+    const res = await fetch(`${API_BASE}/api/weather/${location}`, { mode:'cors' });
+    if(!res.ok) throw new Error(`HTTP error ${res.status}`);
     const json = await res.json();
-    if (!json.success) return;
+    if(!json.success) throw new Error("API success=false");
 
-    const data = json.data;
-    const forecasts = data.forecasts;
+    const today = json.data.forecasts[0];
 
-    // 今日天氣
-    const today = forecasts[0];
     document.getElementById('today-date').textContent = formatDateChinese(today.startTime);
     document.getElementById('today-weather').textContent =
         today.weather.includes('晴') ? '☀️' :
         today.weather.includes('雨') ? '🌧️' : '☁️';
-
     document.getElementById('today-temp').textContent = `${today.minTemp} ~ ${today.maxTemp}`;
     document.getElementById('today-rain').textContent = `降雨機率: ${today.rain}`;
     document.getElementById('today-comfort').textContent = today.comfort;
@@ -287,59 +164,45 @@ async function fetchWeather(location){
     else body.classList.add('bg-cloudy');
 
     // 建議
-    const advice = getAdvice(
-        today.rain.replace('%',''),
-        today.maxTemp.replace('°C','')
-    );
-
+    const advice = getAdvice(today.rain.replace('%',''), today.maxTemp.replace('°C',''));
     document.getElementById('advice-cloth-icon').textContent = advice.clothIcon;
     document.getElementById('advice-cloth-text').textContent = advice.clothText;
     document.getElementById('advice-rain-icon').textContent = advice.rainIcon;
     document.getElementById('advice-rain-text').textContent = advice.rainText;
 
-    // ------- ⭐ 更新的小卡片（含時間） ⭐ -------
+    // 小卡片
     const smallCards = document.querySelectorAll('.small-card');
-
     function fillCard(card, forecast){
-    const d = new Date(forecast.startTime.replace(' ', 'T'));
-    const dayNames = ["日","一","二","三","四","五","六"];
+        const d = new Date(forecast.startTime.replace(' ','T'));
+        const dayNames = ["日","一","二","三","四","五","六"];
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth()+1).padStart(2,'0');
+        const dd = String(d.getDate()).padStart(2,'0');
+        const w = dayNames[d.getDay()];
+        const hh = String(d.getHours()).padStart(2,'0');
+        const min = String(d.getMinutes()).padStart(2,'0');
+        const fullDateTime = `${yyyy}.${mm}.${dd} (星期${w}) ${hh}:${min}`;
+        card.querySelector('.card-date').textContent = fullDateTime;
+        card.querySelector('.card-weather').textContent =
+            forecast.weather.includes('晴') ? '☀️' :
+            forecast.weather.includes('雨') ? '🌧️' : '☁️';
+        card.querySelector('.card-temp').textContent = `${forecast.minTemp} ~ ${forecast.maxTemp}`;
+    }
+    fillCard(smallCards[0], json.data.forecasts[1]);
+    fillCard(smallCards[1], json.data.forecasts[2]);
 
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    const w = dayNames[d.getDay()];
-
-    const hh = String(d.getHours()).padStart(2, '0');
-    const min = String(d.getMinutes()).padStart(2, '0');
-
-    // 完整格式：日期 + 星期 + 時間
-    const fullDateTime = `${yyyy}.${mm}.${dd} (星期${w}) ${hh}:${min}`;
-
-    card.querySelector('.card-date').textContent = fullDateTime;
-
-    card.querySelector('.card-weather').textContent =
-        forecast.weather.includes('晴') ? '☀️' :
-        forecast.weather.includes('雨') ? '🌧️' : '☁️';
-
-    card.querySelector('.card-temp').textContent =
-        `${forecast.minTemp} ~ ${forecast.maxTemp}`;
+}catch(err){
+    console.error('前端抓取天氣失敗:', err);
+    document.getElementById('today-date').textContent = "讀取失敗";
+}
 }
 
-
-    fillCard(smallCards[0], forecasts[1]); // 今天晚上
-    fillCard(smallCards[1], forecasts[2]); // 明天白天
-
-  } catch(err) {
-    console.error('前端讀取天氣失敗', err);
-  }
-}
-
-// 地區選單
+// 地區選單事件
 const locationSelect = document.getElementById('location-select');
 locationSelect.addEventListener('change', ()=>{ fetchWeather(locationSelect.value); });
+
+// 初始化抓取
 fetchWeather(locationSelect.value);
 </script>
-
-
 </body>
 </html>
